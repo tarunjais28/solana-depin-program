@@ -8,6 +8,72 @@
   },
   "instructions": [
     {
+      "name": "create_token",
+      "discriminator": [
+        84,
+        52,
+        204,
+        228,
+        24,
+        140,
+        234,
+        75
+      ],
+      "accounts": [
+        {
+          "name": "mint_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  105,
+                  110,
+                  116,
+                  97,
+                  105,
+                  110,
+                  101,
+                  114,
+                  115
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "params.name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "CreateParams"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -21,6 +87,89 @@
       ],
       "accounts": [],
       "args": []
+    }
+  ],
+  "events": [
+    {
+      "name": "CreateTokenEvent",
+      "discriminator": [
+        4,
+        4,
+        86,
+        151,
+        191,
+        94,
+        245,
+        193
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AmountCantBeZero",
+      "msg": "Error: Amount can't be zero!"
+    },
+    {
+      "code": 6001,
+      "name": "Unauthorized",
+      "msg": "Error: Unauthorized User!"
+    }
+  ],
+  "types": [
+    {
+      "name": "CreateParams",
+      "docs": [
+        "The struct containing instructions for creating tokens"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "docs": [
+              "Token Name"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "docs": [
+              "Symbol"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "docs": [
+              "URI"
+            ],
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateTokenEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "docs": [
+              "Token Name"
+            ],
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "MINT_TAG",
+      "type": "bytes",
+      "value": "[109, 97, 105, 110, 116, 97, 105, 110, 101, 114, 115]"
     }
   ]
 }
