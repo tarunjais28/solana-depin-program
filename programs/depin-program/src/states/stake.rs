@@ -29,7 +29,7 @@ impl StakeState {
     }
 
     // Function to calculate rewards and penality
-    pub fn calc_rewards_and_penality(&mut self) {
+    fn calc_rewards_and_penality(&mut self) {
         let now = Clock::get()
             .expect("Error while getting current timestamp.")
             .unix_timestamp;
@@ -57,20 +57,20 @@ impl StakeState {
     }
 
     // Function to calculate payable amount
-    pub fn withdraw(&mut self, mut amount_after_penality: u64, total_stakers: u64) -> (u64, u64) {
+    pub fn withdraw(&mut self, global_state: &mut GlobalState) -> u64 {
         self.calc_rewards_and_penality();
 
-        let withdrawal_amount = if self.penality > 0 {
+        global_state.total_stakers -= 1;
+
+        if self.penality > 0 {
             let penality = self.penality * self.staked_amount / 100;
-            amount_after_penality += penality;
+            global_state.amount_after_penality += penality;
             self.staked_amount - penality
         } else {
-            let penality_share = amount_after_penality / total_stakers;
-            amount_after_penality -= penality_share;
+            let penality_share = global_state.amount_after_penality / global_state.total_stakers;
+            global_state.amount_after_penality -= penality_share;
             let rewards = self.rewards * self.staked_amount / 100;
             self.staked_amount + rewards + penality_share
-        };
-
-        (withdrawal_amount, amount_after_penality)
+        }
     }
 }

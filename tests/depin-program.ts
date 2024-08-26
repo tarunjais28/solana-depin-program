@@ -45,8 +45,7 @@ describe("depin-program", () => {
     pdaEscrow,
     pdaEscrowA,
     pdaEscrowB,
-    pdaEscrowC,
-    pdaStakeAccount = null;
+    pdaEscrowC = null;
 
   // Declare nft mints
   var tokenAMintAccount,
@@ -81,6 +80,25 @@ describe("depin-program", () => {
       .rpc();
 
     await confirmTransaction(stake);
+  };
+
+  const unstake = async (pdaStakeAccount, userATA) => {
+    // Test unstake instruction
+    let unstake = await program.methods
+      .unstake()
+      .accounts({
+        globalState: pdaGlobal,
+        stakeState: pdaStakeAccount,
+        escrowAccount: pdaEscrow,
+        userVault: userATA,
+        vaultAuthority: user1.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([user1])
+      .rpc();
+
+    await confirmTransaction(unstake);
   };
 
   it("Initialize test accounts", async () => {
@@ -514,7 +532,7 @@ describe("depin-program", () => {
   });
 
   it("Test stake", async () => {
-    let [pdaStakeAccount] = await anchor.web3.PublicKey.findProgramAddress(
+    let [pdaStakeAccount] = await anchor.web3.PublicKey.findProgramAddressSync(
       [LOCK, user1.publicKey.toBytes()],
       program.programId
     );
@@ -564,5 +582,63 @@ describe("depin-program", () => {
     // Check total_staked accounts
     let globalAccount = await program.account.globalState.fetch(pdaGlobal);
     assert.equal(Number(globalAccount.totalStakers), 1);
+    assert.equal(Number(globalAccount.amountAfterPenality), 0);
+  });
+
+  it("Test unstake", async () => {
+    let [pdaStakeAccount] = await anchor.web3.PublicKey.findProgramAddressSync(
+      [LOCK, user1.publicKey.toBytes()],
+      program.programId
+    );
+
+    let user1ATA = await getAssociatedTokenAddress(
+      dpitMintAccount,
+      user1.publicKey
+    );
+
+    let user1BalanceBefore = Number(
+      (await getAccount(provider.connection, user1ATA)).amount
+    );
+    await unstake(pdaStakeAccount, user1ATA);
+
+    // Check remaining mint tokens after transaction
+    user1ATA = await getAssociatedTokenAddress(
+      dpitMintAccount,
+      user1.publicKey
+    );
+    let user1BalanceAfter = Number(
+      (await getAccount(provider.connection, user1ATA)).amount
+    );
+
+    // Check minted token transferred to escrow account after transaction
+    let stakedAccount = await program.account.stakeState.fetch(pdaStakeAccount);
+    assert.equal(Number(stakedAccount.rewards), 0);
+
+    // Since unstake is happen before one day, so 30% penality will be applied
+    assert.equal(Number(stakedAccount.penality), 30);
+
+    let amountAfterPenality =
+      (Number(stakedAccount.penality) * Number(stakedAccount.stakedAmount)) /
+      100;
+
+    // Check total_staked accounts
+    let globalAccount = await program.account.globalState.fetch(pdaGlobal);
+    assert.equal(Number(globalAccount.totalStakers), 0);
+    assert.equal(
+      Number(globalAccount.amountAfterPenality),
+      amountAfterPenality
+    );
+
+    let withdrawalAmount =
+      Number(stakedAccount.stakedAmount) - amountAfterPenality;
+    assert.equal(user1BalanceAfter, user1BalanceBefore + withdrawalAmount);
+
+    let escrowAmount = await provider.connection.getTokenAccountBalance(
+      pdaEscrow
+    );
+    assert.equal(
+      Number(escrowAmount.value.amount),
+      Number(stakedAccount.stakedAmount) - withdrawalAmount
+    );
   });
 });

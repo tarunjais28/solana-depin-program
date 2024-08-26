@@ -8,4 +8,5 @@ pub struct GlobalState {
     pub token_c: Pubkey,
     pub mint_account: Pubkey,
     pub total_stakers: u64,
+    pub amount_after_penality: u64,
 }

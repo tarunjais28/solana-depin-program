@@ -52,7 +52,7 @@ pub struct Stake<'info> {
     pub global_state: Box<Account<'info, GlobalState>>,
 
     #[account(
-        init,
+        init_if_needed,
         seeds = [LOCK_TAG, vault_authority.key().as_ref()],
         bump,
         payer = vault_authority,

@@ -36,4 +36,8 @@ pub mod depin_program {
     pub fn stake(ctx: Context<Stake>, amount: u64) -> Result<()> {
         instructions::stake_amount(ctx, amount)
     }
+
+    pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
+        instructions::unstake_amount(ctx)
+    }
 }

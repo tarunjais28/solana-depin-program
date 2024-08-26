@@ -623,6 +623,98 @@ export type DepinProgram = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "unstake",
+      "discriminator": [
+        90,
+        95,
+        107,
+        42,
+        205,
+        124,
+        50,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "globalState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "stakeState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  99,
+                  107
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vaultAuthority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "userVault",
+          "writable": true
+        },
+        {
+          "name": "vaultAuthority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -718,6 +810,19 @@ export type DepinProgram = {
         75,
         175
       ]
+    },
+    {
+      "name": "unstakeEvent",
+      "discriminator": [
+        162,
+        104,
+        137,
+        228,
+        81,
+        3,
+        79,
+        197
+      ]
     }
   ],
   "errors": [
@@ -800,6 +905,10 @@ export type DepinProgram = {
           {
             "name": "totalStakers",
             "type": "u64"
+          },
+          {
+            "name": "amountAfterPenality",
+            "type": "u64"
           }
         ]
       }
@@ -873,6 +982,22 @@ export type DepinProgram = {
             "docs": [
               "Penality earned"
             ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "unstakeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
             "type": "u64"
           }
         ]
