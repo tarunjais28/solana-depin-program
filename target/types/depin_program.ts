@@ -14,45 +14,138 @@ export type DepinProgram = {
   },
   "instructions": [
     {
-      "name": "createToken",
+      "name": "initialize",
       "discriminator": [
-        84,
-        52,
-        204,
-        228,
-        24,
-        140,
-        234,
-        75
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
       ],
       "accounts": [
         {
-          "name": "mintAccount",
+          "name": "globalState",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  109,
+                  103,
+                  108,
+                  111,
+                  98,
                   97,
-                  105,
-                  110,
-                  116,
-                  97,
-                  105,
-                  110,
-                  101,
-                  114,
-                  115
+                  108
                 ]
-              },
-              {
-                "kind": "arg",
-                "path": "params.name"
               }
             ]
           }
+        },
+        {
+          "name": "escrowAccountA",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountB",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  66
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountC",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  67
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenA"
+        },
+        {
+          "name": "tokenB"
+        },
+        {
+          "name": "tokenC"
+        },
+        {
+          "name": "mintAccount"
         },
         {
           "name": "payer",
@@ -68,31 +161,201 @@ export type DepinProgram = {
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": {
-              "name": "createParams"
-            }
-          }
-        }
-      ]
+      "args": []
     },
     {
-      "name": "initialize",
+      "name": "mint",
       "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
+        51,
+        57,
+        225,
+        47,
+        182,
+        146,
+        137,
+        166
       ],
-      "accounts": [],
-      "args": []
+      "accounts": [
+        {
+          "name": "globalState",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintAccount",
+          "writable": true
+        },
+        {
+          "name": "escrowAccountA",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountB",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  66
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountC",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  67
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenAAta",
+          "writable": true
+        },
+        {
+          "name": "tokenBAta",
+          "writable": true
+        },
+        {
+          "name": "tokenCAta",
+          "writable": true
+        },
+        {
+          "name": "toAccount",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mintAuthority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenA",
+          "type": "u64"
+        },
+        {
+          "name": "tokenB",
+          "type": "u64"
+        },
+        {
+          "name": "tokenC",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "globalState",
+      "discriminator": [
+        163,
+        46,
+        74,
+        168,
+        216,
+        123,
+        133,
+        98
+      ]
     }
   ],
   "events": [
@@ -108,6 +371,32 @@ export type DepinProgram = {
         245,
         193
       ]
+    },
+    {
+      "name": "initializeEvent",
+      "discriminator": [
+        206,
+        175,
+        169,
+        208,
+        241,
+        210,
+        35,
+        221
+      ]
+    },
+    {
+      "name": "mintEvent",
+      "discriminator": [
+        197,
+        144,
+        146,
+        149,
+        66,
+        164,
+        95,
+        16
+      ]
     }
   ],
   "errors": [
@@ -120,41 +409,24 @@ export type DepinProgram = {
       "code": 6001,
       "name": "unauthorized",
       "msg": "Error: Unauthorized User!"
+    },
+    {
+      "code": 6002,
+      "name": "unknownTokenA",
+      "msg": "Error: Unknown Token A Passed!"
+    },
+    {
+      "code": 6003,
+      "name": "unknownTokenB",
+      "msg": "Error: Unknown Token B Passed!"
+    },
+    {
+      "code": 6004,
+      "name": "unknownTokenC",
+      "msg": "Error: Unknown Token C Passed!"
     }
   ],
   "types": [
-    {
-      "name": "createParams",
-      "docs": [
-        "The struct containing instructions for creating tokens"
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "name",
-            "docs": [
-              "Token Name"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "symbol",
-            "docs": [
-              "Symbol"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "uri",
-            "docs": [
-              "URI"
-            ],
-            "type": "string"
-          }
-        ]
-      }
-    },
     {
       "name": "createTokenEvent",
       "type": {
@@ -169,13 +441,83 @@ export type DepinProgram = {
           }
         ]
       }
+    },
+    {
+      "name": "globalState",
+      "docs": [
+        "The struct for storing global configuration"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenA",
+            "type": "pubkey"
+          },
+          {
+            "name": "tokenB",
+            "type": "pubkey"
+          },
+          {
+            "name": "tokenC",
+            "type": "pubkey"
+          },
+          {
+            "name": "mintAccount",
+            "type": "pubkey"
+          },
+          {
+            "name": "totalStakedAmount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "initializeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "mintEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "constants": [
     {
-      "name": "mintTag",
+      "name": "escrowTag",
       "type": "bytes",
-      "value": "[109, 97, 105, 110, 116, 97, 105, 110, 101, 114, 115]"
+      "value": "[101, 115, 99, 114, 111, 119]"
+    },
+    {
+      "name": "globalTag",
+      "type": "bytes",
+      "value": "[103, 108, 111, 98, 97, 108]"
+    },
+    {
+      "name": "tokenAWeightage",
+      "type": "u64",
+      "value": "40"
+    },
+    {
+      "name": "tokenBWeightage",
+      "type": "u64",
+      "value": "30"
+    },
+    {
+      "name": "tokenCWeightage",
+      "type": "u64",
+      "value": "30"
     }
   ]
 };

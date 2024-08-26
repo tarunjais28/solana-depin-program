@@ -9,7 +9,7 @@ use anchor_lang::{
 };
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{self, set_authority, Burn, MintTo, SetAuthority, Token, TransferChecked},
+    token::{self, set_authority, Burn, MintTo, SetAuthority, Token, Transfer},
     token_interface::{token_metadata_initialize, Mint, TokenAccount, TokenMetadataInitialize},
 };
 
@@ -27,14 +27,10 @@ pub mod depin_program {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
-        Ok(())
+        instructions::init(ctx)
     }
 
-    pub fn create_token(ctx: Context<CreateToken>, params: CreateParams) -> Result<()> {
-        instructions::create(ctx, params)
+    pub fn mint(ctx: Context<MintTokens>, token_a: u64, token_b: u64, token_c: u64) -> Result<()> {
+        instructions::mint_tokens(ctx, token_a, token_b, token_c)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}

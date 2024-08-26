@@ -7,4 +7,13 @@ pub enum CustomError {
 
     #[msg("Error: Unauthorized User!")]
     Unauthorized,
+
+    #[msg("Error: Unknown Token A Passed!")]
+    UnknownTokenA,
+
+    #[msg("Error: Unknown Token B Passed!")]
+    UnknownTokenB,
+
+    #[msg("Error: Unknown Token C Passed!")]
+    UnknownTokenC,
 }
