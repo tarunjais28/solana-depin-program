@@ -8,6 +8,172 @@
   },
   "instructions": [
     {
+      "name": "burn",
+      "discriminator": [
+        116,
+        110,
+        29,
+        56,
+        107,
+        219,
+        42,
+        93
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint_account",
+          "writable": true
+        },
+        {
+          "name": "escrow_account_a",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_account_b",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  66
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_account_c",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  67
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_a_ata",
+          "writable": true
+        },
+        {
+          "name": "token_b_ata",
+          "writable": true
+        },
+        {
+          "name": "token_c_ata",
+          "writable": true
+        },
+        {
+          "name": "from_account",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -354,6 +520,19 @@
   ],
   "events": [
     {
+      "name": "BurnEvent",
+      "discriminator": [
+        33,
+        89,
+        47,
+        117,
+        82,
+        124,
+        238,
+        250
+      ]
+    },
+    {
       "name": "CreateTokenEvent",
       "discriminator": [
         4,
@@ -421,6 +600,26 @@
     }
   ],
   "types": [
+    {
+      "name": "BurnEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "token_a",
+            "type": "u64"
+          },
+          {
+            "name": "token_b",
+            "type": "u64"
+          },
+          {
+            "name": "token_c",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "CreateTokenEvent",
       "type": {

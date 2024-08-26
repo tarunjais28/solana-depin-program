@@ -12,3 +12,10 @@ pub struct CreateTokenEvent {
 pub struct MintEvent {
     pub amount: u64,
 }
+
+#[event]
+pub struct BurnEvent {
+    pub token_a: u64,
+    pub token_b: u64,
+    pub token_c: u64,
+}

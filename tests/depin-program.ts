@@ -226,10 +226,13 @@ describe("depin-program", () => {
     assert.equal(globalState.tokenA.toString(), tokenAMintAccount.toString());
     assert.equal(globalState.tokenB.toString(), tokenBMintAccount.toString());
     assert.equal(globalState.tokenC.toString(), tokenCMintAccount.toString());
-    assert.equal(globalState.mintAccount.toString(), dpitMintAccount.toString());
+    assert.equal(
+      globalState.mintAccount.toString(),
+      dpitMintAccount.toString()
+    );
   });
 
-  it("Test Mint", async () => {
+  it("Test Mint Tokens", async () => {
     let tokenA = new BN(LAMPORTS_PER_SOL);
     let tokenB = new BN(LAMPORTS_PER_SOL);
     let tokenC = new BN(LAMPORTS_PER_SOL);
@@ -345,5 +348,140 @@ describe("depin-program", () => {
       pdaEscrowC
     );
     assert.equal(Number(escrowAccountC.value.amount), Number(tokenC));
+  });
+
+  it("Test Burn Tokens", async () => {
+    let amount = new BN(LAMPORTS_PER_SOL);
+    let tokenA = new BN((40 * Number(amount)) / 100);
+    let tokenB = new BN((30 * Number(amount)) / 100);
+    let tokenC = new BN((30 * Number(amount)) / 100);
+
+    let user1TokenAATA = await getAssociatedTokenAddress(
+      tokenAMintAccount,
+      user1.publicKey
+    );
+
+    let user1TokenABalanceBefore = Number(
+      (await getAccount(provider.connection, user1TokenAATA)).amount
+    );
+
+    let user1TokenBATA = await getAssociatedTokenAddress(
+      tokenBMintAccount,
+      user1.publicKey
+    );
+
+    let user1TokenBBalanceBefore = Number(
+      (await getAccount(provider.connection, user1TokenBATA)).amount
+    );
+
+    let user1TokenCATA = await getAssociatedTokenAddress(
+      tokenCMintAccount,
+      user1.publicKey
+    );
+
+    let user1TokenCBalanceBefore = Number(
+      (await getAccount(provider.connection, user1TokenCATA)).amount
+    );
+
+    let user1DpitATA = await getAssociatedTokenAddress(
+      dpitMintAccount,
+      user1.publicKey
+    );
+
+    let user1DpitBalanceBefore = Number(
+      (await getAccount(provider.connection, user1DpitATA.address)).amount
+    );
+
+    let escrowAccountABefore = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowA)).value
+        .amount
+    );
+
+    let escrowAccountBBefore = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowB)).value
+        .amount
+    );
+
+    let escrowAccountCBefore = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowC)).value
+        .amount
+    );
+
+    // Test burn instruction
+    let burn = await program.methods
+      .burn(amount)
+      .accounts({
+        globalState: pdaGlobal,
+        mintAccount: dpitMintAccount,
+        escrowAccountA: pdaEscrowA,
+        escrowAccountB: pdaEscrowB,
+        escrowAccountC: pdaEscrowC,
+        tokenAAta: user1TokenAATA,
+        tokenBAta: user1TokenBATA,
+        tokenCAta: user1TokenCATA,
+        fromAccount: user1DpitATA.address,
+        authority: user1.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      })
+      .signers([user1])
+      .rpc();
+
+    await confirmTransaction(burn);
+
+    // Check token balances
+    let user1TokenABalanceAfter = Number(
+      (await getAccount(provider.connection, user1TokenAATA)).amount
+    );
+
+    let user1TokenBBalanceAfter = Number(
+      (await getAccount(provider.connection, user1TokenBATA)).amount
+    );
+
+    let user1TokenCBalanceAfter = Number(
+      (await getAccount(provider.connection, user1TokenCATA)).amount
+    );
+
+    let user1DpitBalanceAfter = Number(
+      (await getAccount(provider.connection, user1DpitATA.address)).amount
+    );
+
+    assert.equal(
+      user1TokenABalanceAfter,
+      user1TokenABalanceBefore + Number(tokenA)
+    );
+    assert.equal(
+      user1TokenBBalanceAfter,
+      user1TokenBBalanceBefore + Number(tokenB)
+    );
+    assert.equal(
+      user1TokenCBalanceAfter,
+      user1TokenCBalanceBefore + Number(tokenC)
+    );
+    assert.equal(
+      user1DpitBalanceAfter,
+      user1DpitBalanceBefore - Number(LAMPORTS_PER_SOL)
+    );
+
+    // Check Escrow Account balances
+    let escrowAccountAAfter = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowA)).value
+        .amount
+    );
+
+    let escrowAccountBAfter = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowB)).value
+        .amount
+    );
+
+    let escrowAccountCAfter = Number(
+      (await provider.connection.getTokenAccountBalance(pdaEscrowC)).value
+        .amount
+    );
+
+    assert.equal(escrowAccountAAfter, escrowAccountABefore - Number(tokenA));
+    assert.equal(escrowAccountBAfter, escrowAccountBBefore - Number(tokenB));
+    assert.equal(escrowAccountCAfter, escrowAccountCBefore - Number(tokenC));
   });
 });

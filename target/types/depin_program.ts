@@ -14,6 +14,172 @@ export type DepinProgram = {
   },
   "instructions": [
     {
+      "name": "burn",
+      "discriminator": [
+        116,
+        110,
+        29,
+        56,
+        107,
+        219,
+        42,
+        93
+      ],
+      "accounts": [
+        {
+          "name": "globalState",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintAccount",
+          "writable": true
+        },
+        {
+          "name": "escrowAccountA",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountB",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  66
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccountC",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  84,
+                  111,
+                  107,
+                  101,
+                  110,
+                  67
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenAAta",
+          "writable": true
+        },
+        {
+          "name": "tokenBAta",
+          "writable": true
+        },
+        {
+          "name": "tokenCAta",
+          "writable": true
+        },
+        {
+          "name": "fromAccount",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -360,6 +526,19 @@ export type DepinProgram = {
   ],
   "events": [
     {
+      "name": "burnEvent",
+      "discriminator": [
+        33,
+        89,
+        47,
+        117,
+        82,
+        124,
+        238,
+        250
+      ]
+    },
+    {
       "name": "createTokenEvent",
       "discriminator": [
         4,
@@ -427,6 +606,26 @@ export type DepinProgram = {
     }
   ],
   "types": [
+    {
+      "name": "burnEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenA",
+            "type": "u64"
+          },
+          {
+            "name": "tokenB",
+            "type": "u64"
+          },
+          {
+            "name": "tokenC",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "createTokenEvent",
       "type": {
