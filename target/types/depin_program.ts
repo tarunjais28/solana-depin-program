@@ -212,6 +212,25 @@ export type DepinProgram = {
           }
         },
         {
+          "name": "escrowAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "escrowAccountA",
           "writable": true,
           "pda": {
@@ -507,6 +526,103 @@ export type DepinProgram = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "stake",
+      "discriminator": [
+        206,
+        176,
+        202,
+        18,
+        200,
+        209,
+        179,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "globalState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "stakeState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  99,
+                  107
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vaultAuthority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "userVault",
+          "writable": true
+        },
+        {
+          "name": "vaultAuthority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -521,6 +637,19 @@ export type DepinProgram = {
         123,
         133,
         98
+      ]
+    },
+    {
+      "name": "stakeState",
+      "discriminator": [
+        108,
+        10,
+        236,
+        72,
+        1,
+        88,
+        133,
+        92
       ]
     }
   ],
@@ -576,6 +705,19 @@ export type DepinProgram = {
         95,
         16
       ]
+    },
+    {
+      "name": "stakeEvent",
+      "discriminator": [
+        226,
+        134,
+        188,
+        173,
+        19,
+        33,
+        75,
+        175
+      ]
     }
   ],
   "errors": [
@@ -591,18 +733,8 @@ export type DepinProgram = {
     },
     {
       "code": 6002,
-      "name": "unknownTokenA",
-      "msg": "Error: Unknown Token A Passed!"
-    },
-    {
-      "code": 6003,
-      "name": "unknownTokenB",
-      "msg": "Error: Unknown Token B Passed!"
-    },
-    {
-      "code": 6004,
-      "name": "unknownTokenC",
-      "msg": "Error: Unknown Token C Passed!"
+      "name": "insufficientFunds",
+      "msg": "Error: Your balance is not enough."
     }
   ],
   "types": [
@@ -666,7 +798,7 @@ export type DepinProgram = {
             "type": "pubkey"
           },
           {
-            "name": "totalStakedAmount",
+            "name": "totalStakers",
             "type": "u64"
           }
         ]
@@ -690,6 +822,61 @@ export type DepinProgram = {
           }
         ]
       }
+    },
+    {
+      "name": "stakeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "stakeState",
+      "docs": [
+        "The struct containing instructions for staking"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stakedAmount",
+            "docs": [
+              "Initial staked amount"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "stakedAt",
+            "docs": [
+              "Timestamp when token is going to staked"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "rewards",
+            "docs": [
+              "Rewards earned"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "penality",
+            "docs": [
+              "Penality earned"
+            ],
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "constants": [
@@ -702,6 +889,16 @@ export type DepinProgram = {
       "name": "globalTag",
       "type": "bytes",
       "value": "[103, 108, 111, 98, 97, 108]"
+    },
+    {
+      "name": "lockTag",
+      "type": "bytes",
+      "value": "[108, 111, 99, 107]"
+    },
+    {
+      "name": "secondsPerDay",
+      "type": "u64",
+      "value": "86400"
     },
     {
       "name": "tokenAWeightage",

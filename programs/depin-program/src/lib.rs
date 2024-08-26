@@ -32,4 +32,8 @@ pub mod depin_program {
     pub fn burn(ctx: Context<BurnTokens>, amount: u64) -> Result<()> {
         instructions::burn_tokens(ctx, amount)
     }
+
+    pub fn stake(ctx: Context<Stake>, amount: u64) -> Result<()> {
+        instructions::stake_amount(ctx, amount)
+    }
 }

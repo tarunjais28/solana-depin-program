@@ -7,5 +7,5 @@ pub struct GlobalState {
     pub token_b: Pubkey,
     pub token_c: Pubkey,
     pub mint_account: Pubkey,
-    pub total_staked_amount: u64,
+    pub total_stakers: u64,
 }

@@ -1,5 +1,6 @@
 use super::*;
 
 mod global;
+mod stake;
 
-pub use global::*;
+pub use {global::*, stake::*};

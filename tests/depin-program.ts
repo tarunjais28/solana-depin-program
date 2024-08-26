@@ -3,7 +3,7 @@ import { Program } from "@coral-xyz/anchor";
 import { DepinProgram } from "../target/types/depin_program";
 import { BN } from "bn.js";
 import { assert } from "chai";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   getOrCreateAssociatedTokenAccount,
   getAssociatedTokenAddress,
@@ -28,6 +28,7 @@ const ESCROW = Buffer.from("escrow");
 const TOKEN_A = Buffer.from("TokenA");
 const TOKEN_B = Buffer.from("TokenB");
 const TOKEN_C = Buffer.from("TokenC");
+const LOCK = Buffer.from("lock");
 
 // Constant values
 const DECIMALS = 9;
@@ -41,9 +42,11 @@ describe("depin-program", () => {
 
   // Declare PDAs
   let pdaGlobal,
+    pdaEscrow,
     pdaEscrowA,
     pdaEscrowB,
-    pdaEscrowC = null;
+    pdaEscrowC,
+    pdaStakeAccount = null;
 
   // Declare nft mints
   var tokenAMintAccount,
@@ -59,6 +62,25 @@ describe("depin-program", () => {
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: tx,
     });
+  };
+
+  const stake = async (staked_amount, pdaStakeAccount, userATA) => {
+    // Test stake instruction
+    let stake = await program.methods
+      .stake(staked_amount)
+      .accounts({
+        globalState: pdaGlobal,
+        stakeState: pdaStakeAccount,
+        escrowAccount: pdaEscrow,
+        userVault: userATA,
+        vaultAuthority: user1.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([user1])
+      .rpc();
+
+    await confirmTransaction(stake);
   };
 
   it("Initialize test accounts", async () => {
@@ -186,6 +208,11 @@ describe("depin-program", () => {
       program.programId
     );
 
+    [pdaEscrow] = anchor.web3.PublicKey.findProgramAddressSync(
+      [ESCROW],
+      program.programId
+    );
+
     [pdaEscrowA] = anchor.web3.PublicKey.findProgramAddressSync(
       [ESCROW, TOKEN_A],
       program.programId
@@ -206,6 +233,7 @@ describe("depin-program", () => {
       .initialize()
       .accounts({
         globalState: pdaGlobal,
+        escrowAccount: pdaEscrow,
         escrowAccountA: pdaEscrowA,
         escrowAccountB: pdaEscrowB,
         escrowAccountC: pdaEscrowC,
@@ -389,7 +417,7 @@ describe("depin-program", () => {
     );
 
     let user1DpitBalanceBefore = Number(
-      (await getAccount(provider.connection, user1DpitATA.address)).amount
+      (await getAccount(provider.connection, user1DpitATA)).amount
     );
 
     let escrowAccountABefore = Number(
@@ -419,7 +447,7 @@ describe("depin-program", () => {
         tokenAAta: user1TokenAATA,
         tokenBAta: user1TokenBATA,
         tokenCAta: user1TokenCATA,
-        fromAccount: user1DpitATA.address,
+        fromAccount: user1DpitATA,
         authority: user1.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -444,7 +472,7 @@ describe("depin-program", () => {
     );
 
     let user1DpitBalanceAfter = Number(
-      (await getAccount(provider.connection, user1DpitATA.address)).amount
+      (await getAccount(provider.connection, user1DpitATA)).amount
     );
 
     assert.equal(
@@ -483,5 +511,58 @@ describe("depin-program", () => {
     assert.equal(escrowAccountAAfter, escrowAccountABefore - Number(tokenA));
     assert.equal(escrowAccountBAfter, escrowAccountBBefore - Number(tokenB));
     assert.equal(escrowAccountCAfter, escrowAccountCBefore - Number(tokenC));
+  });
+
+  it("Test stake", async () => {
+    let [pdaStakeAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [LOCK, user1.publicKey.toBytes()],
+      program.programId
+    );
+
+    let stakeAmount = new BN(LAMPORTS_PER_SOL);
+
+    let user1ATA = await getAssociatedTokenAddress(
+      dpitMintAccount,
+      user1.publicKey
+    );
+
+    await mintToChecked(
+      provider.connection,
+      payer,
+      dpitMintAccount,
+      user1ATA,
+      mintAuthority,
+      100000 * LAMPORTS_PER_SOL,
+      DECIMALS
+    );
+
+    let user1BalanceBefore = Number(
+      (await getAccount(provider.connection, user1ATA)).amount
+    );
+    await stake(stakeAmount, pdaStakeAccount, user1ATA);
+
+    // Check remaining mint tokens after transaction
+    user1ATA = await getAssociatedTokenAddress(
+      dpitMintAccount,
+      user1.publicKey
+    );
+    let user1BalanceAfter = Number(
+      (await getAccount(provider.connection, user1ATA)).amount
+    );
+    assert.equal(user1BalanceAfter, user1BalanceBefore - Number(stakeAmount));
+
+    // Check minted token transferred to escrow account after transaction
+    let stakedAccount = await program.account.stakeState.fetch(pdaStakeAccount);
+    let escrowAmount = await provider.connection.getTokenAccountBalance(
+      pdaEscrow
+    );
+    assert.equal(Number(escrowAmount.value.amount), Number(stakeAmount));
+    assert.equal(Number(stakedAccount.stakedAmount), Number(stakeAmount));
+    assert.equal(Number(stakedAccount.rewards), 0);
+    assert.equal(Number(stakedAccount.penality), 0);
+
+    // Check total_staked accounts
+    let globalAccount = await program.account.globalState.fetch(pdaGlobal);
+    assert.equal(Number(globalAccount.totalStakers), 1);
   });
 });

@@ -28,6 +28,16 @@ pub struct Initialize<'info> {
 
     #[account(
         init,
+        token::mint = mint_account,
+        token::authority = escrow_account,
+        seeds = [ESCROW_TAG],
+        bump,
+        payer = payer,
+    )]
+    pub escrow_account: Box<InterfaceAccount<'info, TokenAccount>>,
+
+    #[account(
+        init,
         token::mint = token_a,
         token::authority = escrow_account_a,
         seeds = [ESCROW_TAG, b"TokenA"],
