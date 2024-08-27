@@ -2,6 +2,13 @@
 
 The DePIN program is a Solana smart contract designed to manage token operations including initialization, minting, burning, staking, and unstaking of tokens. This program uses the Anchor framework and the Anchor SPL (Solana Program Library) for token management.
 
+## Setup and Dependencies
+
+Ensure you have the following dependencies installed:
+- Anchor Documentation: project-serum.github.io/anchor/
+- Solana Documentation: docs.solana.com/
+- Solana CLI Documentation: docs.solana.com/cli
+
 ## Program Overview
 
 This program exposes several functions that interact with the Solana blockchain to perform various token-related operations. The core functions provided by the program are:
@@ -87,9 +94,36 @@ pub fn unstake(ctx: Context<Unstake>) -> Result<()> {
 }
 ```
 
-## Setup and Dependencies
+## Token Details
 
-Ensure you have the following dependencies installed:
-- Anchor Documentation: project-serum.github.io/anchor/
-- Solana Documentation: docs.solana.com/
-- Solana CLI Documentation: docs.solana.com/cli
+### Token Name: Token A
+
+```
+Address: GvYxdiCNt87kbMgVje99eDr8JjbuUVRZxsHEXEmFDpNC
+Mint: 9yj32Bk5Jv2jSG2fMw9P8TEvMNUcwbf5KZR5RWZJMTEX
+Decimals:  9
+```
+
+### Token Name: Token B
+
+```
+Address: 2FtVW7e6SdrZMvK5Gf17zPHvfYdUDio6e19MXFBuHWau
+Mint: GRTh3GajaetVDCZeTEPn7SC45nqUcYCvh4gNjvnYhQoB
+Decimals:  9
+```
+
+### Token Name: Token C
+
+```
+Address: CK4tmj838mHyGdfmUrWAtzZHfJhAWebeDvC6ee1C6tz2
+Mint: 8aoS8p9xHD3cLKgAjEngCSCcjk9wf2dXtarYjThQCTdP
+Decimals:  9
+```
+
+### Token Name: DePIN Index Token
+
+```
+Address: 5tZKiLnG9FnnhcXd2B9hnqqNcmzvXtpuimvHeucVnc76 
+Mint: CwmJZE2ByVbxEeB6UDcn2dQDpv2rkNUAhRy5PtoCrd5F
+Decimals:  9
+```
