@@ -208,6 +208,54 @@ export type DepinProgram = {
           }
         },
         {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initializeEscrows1",
+      "discriminator": [
+        65,
+        248,
+        4,
+        128,
+        79,
+        223,
+        43,
+        112
+      ],
+      "accounts": [
+        {
+          "name": "globalState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "escrowAccount",
           "writable": true,
           "pda": {
@@ -251,6 +299,60 @@ export type DepinProgram = {
                   101,
                   110,
                   65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintAccount"
+        },
+        {
+          "name": "tokenA"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initializeEscrows2",
+      "discriminator": [
+        25,
+        200,
+        220,
+        103,
+        40,
+        83,
+        29,
+        76
+      ],
+      "accounts": [
+        {
+          "name": "globalState",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
                 ]
               }
             ]
@@ -317,16 +419,10 @@ export type DepinProgram = {
           }
         },
         {
-          "name": "tokenA"
-        },
-        {
           "name": "tokenB"
         },
         {
           "name": "tokenC"
-        },
-        {
-          "name": "mintAccount"
         },
         {
           "name": "payer",

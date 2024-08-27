@@ -26,12 +26,29 @@ declare_id!("3W7pnY6U3Aa7ERYf7KTwMmfNmyFRNTNivR4Ya6nKScXh");
 #[program]
 pub mod depin_program {
     use super::*;
-
     // Function to initialize the program. Calls the corresponding
     // initialization instruction.
+    //
+    // Note: Initialize function is splitted into 3 parts to overcome
+    // "Access violation in stack frame 5 at address 0x200005dc8 of size 8" error
+    // on devnet.
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         // Delegate to the `init` function in the `instructions` module.
         instructions::init(ctx)
+    }
+
+    // Function to initialize the escrow accounts group 1. Calls the corresponding
+    // initialization instruction.
+    pub fn initialize_escrows_1(ctx: Context<InitializeEscrows1>) -> Result<()> {
+        // Delegate to the `init` function in the `instructions` module.
+        instructions::init_escrow_accounts_1(ctx)
+    }
+
+    // Function to initialize the escrow accounts group 2. Calls the corresponding
+    // initialization instruction.
+    pub fn initialize_escrows_2(ctx: Context<InitializeEscrows2>) -> Result<()> {
+        // Delegate to the `init` function in the `instructions` module.
+        instructions::init_escrow_accounts_2(ctx)
     }
 
     // Function to mint tokens. Specifies amounts for three different tokens

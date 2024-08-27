@@ -27,7 +27,7 @@ pub struct BurnEvent {
 
     // Amount of Token B burned.
     pub token_b: u64,
-    
+
     // Amount of Token C burned.
     pub token_c: u64,
 }

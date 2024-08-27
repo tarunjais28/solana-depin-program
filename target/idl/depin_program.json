@@ -202,6 +202,54 @@
           }
         },
         {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_escrows_1",
+      "discriminator": [
+        65,
+        248,
+        4,
+        128,
+        79,
+        223,
+        43,
+        112
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "escrow_account",
           "writable": true,
           "pda": {
@@ -245,6 +293,60 @@
                   101,
                   110,
                   65
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint_account"
+        },
+        {
+          "name": "token_a"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_escrows_2",
+      "discriminator": [
+        25,
+        200,
+        220,
+        103,
+        40,
+        83,
+        29,
+        76
+      ],
+      "accounts": [
+        {
+          "name": "global_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  108,
+                  111,
+                  98,
+                  97,
+                  108
                 ]
               }
             ]
@@ -311,16 +413,10 @@
           }
         },
         {
-          "name": "token_a"
-        },
-        {
           "name": "token_b"
         },
         {
           "name": "token_c"
-        },
-        {
-          "name": "mint_account"
         },
         {
           "name": "payer",

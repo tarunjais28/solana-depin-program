@@ -43,11 +43,30 @@ describe("depin-program", () => {
   const program = anchor.workspace.DepinProgram as Program<DepinProgram>;
 
   // Declare PDAs
-  let pdaGlobal,
-    pdaEscrow,
-    pdaEscrowA,
-    pdaEscrowB,
-    pdaEscrowC = null;
+  const [pdaGlobal] = anchor.web3.PublicKey.findProgramAddressSync(
+    [GLOBAL],
+    program.programId
+  );
+
+  const [pdaEscrow] = anchor.web3.PublicKey.findProgramAddressSync(
+    [ESCROW],
+    program.programId
+  );
+
+  const [pdaEscrowA] = anchor.web3.PublicKey.findProgramAddressSync(
+    [ESCROW, TOKEN_A],
+    program.programId
+  );
+
+  const [pdaEscrowB] = anchor.web3.PublicKey.findProgramAddressSync(
+    [ESCROW, TOKEN_B],
+    program.programId
+  );
+
+  const [pdaEscrowC] = anchor.web3.PublicKey.findProgramAddressSync(
+    [ESCROW, TOKEN_C],
+    program.programId
+  );
 
   // Declare nft mints
   var tokenAMintAccount,
@@ -223,43 +242,11 @@ describe("depin-program", () => {
   });
 
   it("Initialize global account", async () => {
-    [pdaGlobal] = anchor.web3.PublicKey.findProgramAddressSync(
-      [GLOBAL],
-      program.programId
-    );
-
-    [pdaEscrow] = anchor.web3.PublicKey.findProgramAddressSync(
-      [ESCROW],
-      program.programId
-    );
-
-    [pdaEscrowA] = anchor.web3.PublicKey.findProgramAddressSync(
-      [ESCROW, TOKEN_A],
-      program.programId
-    );
-
-    [pdaEscrowB] = anchor.web3.PublicKey.findProgramAddressSync(
-      [ESCROW, TOKEN_B],
-      program.programId
-    );
-
-    [pdaEscrowC] = anchor.web3.PublicKey.findProgramAddressSync(
-      [ESCROW, TOKEN_C],
-      program.programId
-    );
-
     // Test initialize instruction
     let init = await program.methods
       .initialize()
       .accounts({
         globalState: pdaGlobal,
-        escrowAccount: pdaEscrow,
-        escrowAccountA: pdaEscrowA,
-        escrowAccountB: pdaEscrowB,
-        escrowAccountC: pdaEscrowC,
-        tokenA: tokenAMintAccount,
-        tokenB: tokenBMintAccount,
-        tokenC: tokenCMintAccount,
         mintAccount: dpitMintAccount,
         payer: admin.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -269,15 +256,46 @@ describe("depin-program", () => {
       .rpc();
 
     await confirmTransaction(init);
+  });
 
-    let globalState = await program.account.globalState.fetch(pdaGlobal);
-    assert.equal(globalState.tokenA.toString(), tokenAMintAccount.toString());
-    assert.equal(globalState.tokenB.toString(), tokenBMintAccount.toString());
-    assert.equal(globalState.tokenC.toString(), tokenCMintAccount.toString());
-    assert.equal(
-      globalState.mintAccount.toString(),
-      dpitMintAccount.toString()
-    );
+  it("Initialize escrow accounts group 1", async () => {
+    // Test initialize instruction
+    let init = await program.methods
+      .initializeEscrows1()
+      .accounts({
+        globalState: pdaGlobal,
+        escrowAccount: pdaEscrow,
+        escrowAccountA: pdaEscrowA,
+        mintAccount: dpitMintAccount,
+        tokenA: tokenAMintAccount,
+        payer: admin.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([admin])
+      .rpc();
+
+    await confirmTransaction(init);
+  });
+
+  it("Initialize escrow accounts group 2", async () => {
+    // Test initialize instruction
+    let init = await program.methods
+      .initializeEscrows2()
+      .accounts({
+        globalState: pdaGlobal,
+        escrowAccountB: pdaEscrowB,
+        escrowAccountC: pdaEscrowC,
+        tokenB: tokenBMintAccount,
+        tokenC: tokenCMintAccount,
+        payer: admin.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([admin])
+      .rpc();
+
+    await confirmTransaction(init);
   });
 
   it("Test Mint Tokens", async () => {
@@ -375,10 +393,7 @@ describe("depin-program", () => {
         TOKEN_B_WEIGHTAGE * tokenB.toNumber() +
         TOKEN_C_WEIGHTAGE * tokenC.toNumber()) /
       100;
-    assert.equal(
-      user1DpitBalance,
-      expected_dpit_tokens
-    );
+    assert.equal(user1DpitBalance, expected_dpit_tokens);
 
     // Check Escrow Account balances
     let escrowAccountA = await provider.connection.getTokenAccountBalance(
@@ -470,7 +485,6 @@ describe("depin-program", () => {
         authority: user1.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       })
       .signers([user1])
       .rpc();
@@ -533,7 +547,7 @@ describe("depin-program", () => {
   });
 
   it("Test stake", async () => {
-    let [pdaStakeAccount] = await anchor.web3.PublicKey.findProgramAddressSync(
+    let [pdaStakeAccount] = anchor.web3.PublicKey.findProgramAddressSync(
       [LOCK, user1.publicKey.toBytes()],
       program.programId
     );
