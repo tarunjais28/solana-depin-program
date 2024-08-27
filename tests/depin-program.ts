@@ -19,7 +19,6 @@ const admin = anchor.web3.Keypair.generate();
 const payer = anchor.web3.Keypair.generate();
 const user1 = anchor.web3.Keypair.generate();
 const user2 = anchor.web3.Keypair.generate();
-const vault = anchor.web3.Keypair.generate();
 const mintAuthority = anchor.web3.Keypair.generate();
 
 // Constant seeds
@@ -313,15 +312,9 @@ describe("depin-program", () => {
       (await getAccount(provider.connection, user1TokenCATA)).amount
     );
 
-    let user1DpitATA = await getOrCreateAssociatedTokenAccount(
-      provider.connection,
-      payer,
+    let user1DpitATA = await getAssociatedTokenAddress(
       dpitMintAccount,
       user1.publicKey
-    );
-
-    let user1DpitBalanceBefore = Number(
-      (await getAccount(provider.connection, user1DpitATA.address)).amount
     );
 
     // Test mint instruction
@@ -336,7 +329,7 @@ describe("depin-program", () => {
         tokenAAta: user1TokenAATA,
         tokenBAta: user1TokenBATA,
         tokenCAta: user1TokenCATA,
-        toAccount: user1DpitATA.address,
+        toAccount: user1DpitATA,
         authority: user1.publicKey,
         mintAuthority: mintAuthority.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -361,8 +354,8 @@ describe("depin-program", () => {
       (await getAccount(provider.connection, user1TokenCATA)).amount
     );
 
-    let user1DpitBalanceAfter = Number(
-      (await getAccount(provider.connection, user1DpitATA.address)).amount
+    let user1DpitBalance = Number(
+      (await getAccount(provider.connection, user1DpitATA)).amount
     );
 
     assert.equal(
@@ -383,8 +376,8 @@ describe("depin-program", () => {
         TOKEN_C_WEIGHTAGE * tokenC.toNumber()) /
       100;
     assert.equal(
-      user1DpitBalanceAfter,
-      user1DpitBalanceBefore + expected_dpit_tokens
+      user1DpitBalance,
+      expected_dpit_tokens
     );
 
     // Check Escrow Account balances

@@ -141,7 +141,11 @@ pub struct MintTokens<'info> {
 
     /// CHECK: This is the token account that we want to mint tokens to (ATA)
     #[account(
-        mut,
+        init_if_needed,
+        payer = authority,
+        associated_token::mint = mint_account,
+        associated_token::authority = authority,
+        associated_token::token_program = token_program,
         constraint = to_account.mint == global_state.mint_account // Ensure the destination mint matches the global state
     )]
     pub to_account: InterfaceAccount<'info, TokenAccount>, // Destination account to which tokens will be minted

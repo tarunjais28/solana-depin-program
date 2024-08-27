@@ -171,6 +171,4 @@ pub struct BurnTokens<'info> {
     pub token_program: Program<'info, Token>, // Solana Token Program for handling SPL tokens
 
     pub system_program: Program<'info, System>, // Solana System Program
-
-    pub associated_token_program: Program<'info, AssociatedToken>, // Solana Associated Token Program for creating ATAs
 }
