@@ -32,6 +32,9 @@ const LOCK = Buffer.from("lock");
 
 // Constant values
 const DECIMALS = 9;
+const TOKEN_A_WEIGHTAGE = 40;
+const TOKEN_B_WEIGHTAGE = 30;
+const TOKEN_C_WEIGHTAGE = 30;
 
 describe("depin-program", () => {
   // Configure the client to use the local cluster.
@@ -374,9 +377,14 @@ describe("depin-program", () => {
       user1TokenCBalanceAfter,
       user1TokenCBalanceBefore - Number(tokenC)
     );
+    let expected_dpit_tokens =
+      (TOKEN_A_WEIGHTAGE * tokenA.toNumber() +
+        TOKEN_B_WEIGHTAGE * tokenB.toNumber() +
+        TOKEN_C_WEIGHTAGE * tokenC.toNumber()) /
+      100;
     assert.equal(
       user1DpitBalanceAfter,
-      user1DpitBalanceBefore + Number(LAMPORTS_PER_SOL)
+      user1DpitBalanceBefore + expected_dpit_tokens
     );
 
     // Check Escrow Account balances
@@ -398,9 +406,9 @@ describe("depin-program", () => {
 
   it("Test Burn Tokens", async () => {
     let amount = new BN(LAMPORTS_PER_SOL);
-    let tokenA = new BN((40 * Number(amount)) / 100);
-    let tokenB = new BN((30 * Number(amount)) / 100);
-    let tokenC = new BN((30 * Number(amount)) / 100);
+    let tokenA = new BN((TOKEN_A_WEIGHTAGE * Number(amount)) / 100);
+    let tokenB = new BN((TOKEN_B_WEIGHTAGE * Number(amount)) / 100);
+    let tokenC = new BN((TOKEN_C_WEIGHTAGE * Number(amount)) / 100);
 
     let user1TokenAATA = await getAssociatedTokenAddress(
       tokenAMintAccount,

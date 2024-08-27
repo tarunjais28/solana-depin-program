@@ -871,7 +871,7 @@ export type DepinProgram = {
           {
             "name": "name",
             "docs": [
-              "Token Name"
+              "The name of the token being created."
             ],
             "type": "string"
           }
@@ -959,28 +959,28 @@ export type DepinProgram = {
           {
             "name": "stakedAmount",
             "docs": [
-              "Initial staked amount"
+              "Initial staked amount by the user"
             ],
             "type": "u64"
           },
           {
             "name": "stakedAt",
             "docs": [
-              "Timestamp when token is going to staked"
+              "Timestamp of when the tokens were staked"
             ],
             "type": "i64"
           },
           {
             "name": "rewards",
             "docs": [
-              "Rewards earned"
+              "Rewards earned based on staking duration"
             ],
             "type": "u64"
           },
           {
             "name": "penality",
             "docs": [
-              "Penality earned"
+              "Penalty applied for early withdrawal"
             ],
             "type": "u64"
           }
@@ -1007,36 +1007,57 @@ export type DepinProgram = {
   "constants": [
     {
       "name": "escrowTag",
+      "docs": [
+        "Constant tag used to identify escrow accounts"
+      ],
       "type": "bytes",
       "value": "[101, 115, 99, 114, 111, 119]"
     },
     {
       "name": "globalTag",
+      "docs": [
+        "Constant tag used to identify the global state account"
+      ],
       "type": "bytes",
       "value": "[103, 108, 111, 98, 97, 108]"
     },
     {
       "name": "lockTag",
+      "docs": [
+        "Constant tag used to identify lock accounts related to staking"
+      ],
       "type": "bytes",
       "value": "[108, 111, 99, 107]"
     },
     {
       "name": "secondsPerDay",
+      "docs": [
+        "Constant representing the number of seconds in a day (used for time-based calculations)"
+      ],
       "type": "u64",
       "value": "86400"
     },
     {
       "name": "tokenAWeightage",
+      "docs": [
+        "Weightage (percentage) assigned to Token A in the calculations"
+      ],
       "type": "u64",
       "value": "40"
     },
     {
       "name": "tokenBWeightage",
+      "docs": [
+        "Weightage (percentage) assigned to Token B in the calculations"
+      ],
       "type": "u64",
       "value": "30"
     },
     {
       "name": "tokenCWeightage",
+      "docs": [
+        "Weightage (percentage) assigned to Token C in the calculations"
+      ],
       "type": "u64",
       "value": "30"
     }
