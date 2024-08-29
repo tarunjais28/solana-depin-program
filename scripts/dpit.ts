@@ -147,10 +147,10 @@ const getProgramData = async () => {
   console.log("Escrow tokenA balance: ", tokenA.value.uiAmount);
 
   let tokenB = await provider.connection.getTokenAccountBalance(pdaEscrowB);
-  console.log("Escrow tokenA balance: ", tokenB.value.uiAmount);
+  console.log("Escrow tokenB balance: ", tokenB.value.uiAmount);
 
   let tokenC = await provider.connection.getTokenAccountBalance(pdaEscrowC);
-  console.log("Escrow tokenA balance: ", tokenC.value.uiAmount);
+  console.log("Escrow tokenC balance: ", tokenC.value.uiAmount);
 };
 
 const getStakedData = async (user: PublicKey) => {
@@ -201,7 +201,7 @@ const mint = async (user: PublicKey) => {
 };
 
 const burn = async (user: PublicKey) => {
-  let amount = new BN(LAMPORTS_PER_SOL);
+  let amount = new BN(2 * LAMPORTS_PER_SOL);
 
   let userTokenAATA = await getAssociatedTokenAddress(tokenAMintAccount, user);
 
@@ -236,7 +236,7 @@ const stake = async (user: PublicKey) => {
     program.programId
   );
 
-  let amount = new BN(LAMPORTS_PER_SOL);
+  let amount = new BN(2 * LAMPORTS_PER_SOL);
 
   let userATA = await getAssociatedTokenAddress(dpitMintAccount, user);
 

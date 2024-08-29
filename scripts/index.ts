@@ -9,12 +9,12 @@ const callTheFunction = async () => {
   // await dpit.initEscrows1();
   // await dpit.initEscrows2();
   // await dpit.getTokenSupplies();
-  // await dpit.getTokenBalances(UserAddress);
+  await dpit.getTokenBalances(UserAddress);
   // await dpit.getProgramData();
   // await dpit.mint(UserAddress);
   // await dpit.burn(UserAddress);
   // await dpit.stake(UserAddress);
-  await dpit.getStakedData(UserAddress);
+  // await dpit.getStakedData(UserAddress);
   // await dpit.unstake(UserAddress);
 
   console.log("\nFunctions Triggered, success !");

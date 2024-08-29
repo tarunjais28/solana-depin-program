@@ -70,11 +70,8 @@ impl StakeState {
         // Calculate rewards and penalties based on the staking duration
         self.calc_rewards_and_penality();
 
-        // Decrease the total number of stakers in the global state
-        global_state.total_stakers -= 1;
-
         // If there is a penalty, calculate the penalty amount
-        if self.penality > 0 {
+        let amount = if self.penality > 0 {
             let penality = self.penality * self.staked_amount / 100;
             global_state.amount_after_penality += penality; // Add the penalty to the global state
             self.staked_amount - penality // Return the staked amount minus the penalty
@@ -84,6 +81,11 @@ impl StakeState {
             global_state.amount_after_penality -= penality_share; // Deduct the share from global state
             let rewards = self.rewards * self.staked_amount / 100; // Calculate the rewards
             self.staked_amount + rewards + penality_share // Return the staked amount plus rewards and penalty share
-        }
+        };
+
+        // Decrease the total number of stakers in the global state
+        global_state.total_stakers -= 1;
+
+        amount
     }
 }
