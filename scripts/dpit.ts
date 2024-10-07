@@ -260,8 +260,6 @@ const unstake = async (user: PublicKey) => {
     program.programId
   );
 
-  let amount = new BN(LAMPORTS_PER_SOL);
-
   let userATA = await getAssociatedTokenAddress(dpitMintAccount, user);
 
   await program.methods

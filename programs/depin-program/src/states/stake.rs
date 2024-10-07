@@ -2,7 +2,7 @@ use super::*;
 
 /// The struct containing instructions for staking
 #[account]
-#[derive(Default)] // Automatically provides a default value for the struct's fields
+#[derive(Debug, Default)] // Automatically provides a default value for the struct's fields
 pub struct StakeState {
     /// Initial staked amount by the user
     pub staked_amount: u64,

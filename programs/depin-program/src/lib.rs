@@ -1,5 +1,5 @@
 // Import necessary modules and crates for the program.
-use crate::{constants::*, errors::*, events::*, instructions::*, states::*};
+use crate::{constants::*, errors::*, events::*, instructions::*};
 use anchor_lang::{
     prelude::*,
     solana_program::{account_info::AccountInfo, sysvar::Sysvar},
@@ -9,6 +9,7 @@ use anchor_spl::{
     token::{self, Burn, MintTo, Token, Transfer},
     token_interface::TokenAccount,
 };
+pub use states::{GlobalState, StakeState};
 
 // Declare the custom modules used within the program for constants, errors,
 // events, instructions, and states.
@@ -25,7 +26,7 @@ declare_id!("3W7pnY6U3Aa7ERYf7KTwMmfNmyFRNTNivR4Ya6nKScXh");
 // Define the program module and its associated functions.
 #[program]
 pub mod depin_program {
-    use super::*;
+    pub use super::*;
     // Function to initialize the program. Calls the corresponding
     // initialization instruction.
     //

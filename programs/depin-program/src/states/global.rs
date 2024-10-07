@@ -2,6 +2,7 @@ use super::*;
 
 /// The struct for storing global configuration
 #[account]
+#[derive(Debug)]
 pub struct GlobalState {
     pub token_a: Pubkey,      // Public key of Token A (likely a specific SPL token)
     pub token_b: Pubkey,      // Public key of Token B (likely a specific SPL token)
