@@ -34,23 +34,33 @@ async fn listen_for_events(client: RpcClient, program_id: Pubkey) {
         max_supported_transaction_version: Some(2),
     };
 
+    let mut backoff_duration = Duration::from_millis(100);
+    let max_backoff = Duration::from_secs(60);
+
     loop {
-        // Poll for the most recent slot (block height)
         match client.get_slot() {
             Ok(current_slot) => {
                 if current_slot > last_slot {
                     // Fetch transactions for the new slot
-                    let confirmed_block = client.get_block_with_config(current_slot, config);
-                    if let Ok(block) = confirmed_block {
-                        if let Some(tx) = block.transactions {
-                            process_block_logs(tx, &program_id);
+                    match client.get_block_with_config(current_slot, config) {
+                        Ok(block) => {
+                            if let Some(transactions) = block.transactions {
+                                process_block_logs(transactions, &program_id);
+                            }
+                            last_slot = current_slot;
+                            backoff_duration = Duration::from_millis(100); // Reset backoff on success
+                        }
+                        Err(err) => {
+                            eprintln!("Error fetching block: {}", err);
+                            // Consider adding a backoff strategy here
                         }
                     }
-                    last_slot = current_slot;
                 }
             }
             Err(err) => {
                 eprintln!("Error getting slot: {}", err);
+                sleep(backoff_duration).await;
+                backoff_duration = std::cmp::min(backoff_duration * 2, max_backoff);
             }
         }
 
@@ -60,6 +70,7 @@ async fn listen_for_events(client: RpcClient, program_id: Pubkey) {
 }
 
 fn process_block_logs(transactions: Vec<EncodedTransactionWithStatusMeta>, program_id: &Pubkey) {
+    let tx_len = transactions.len();
     for transaction in transactions {
         if let Some(meta) = transaction.meta {
             if let OptionSerializer::Some(log_messages) = meta.log_messages {
@@ -73,6 +84,7 @@ fn process_block_logs(transactions: Vec<EncodedTransactionWithStatusMeta>, progr
             }
         }
     }
+    println!("Processed {} transactions", tx_len);
 }
 
 // Function to handle event when a log matches the program
